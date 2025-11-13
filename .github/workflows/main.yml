@@ -104,7 +104,10 @@ jobs:
           echo "DEO_BACKEND_PID=$!" >> "$GITHUB_ENV"
           dotnet run --no-build --project Deo.Frontend -e DEO_BACKEND_URL=$DEO_BACKEND_URL -- --urls $DEO_FRONTEND_URL > /dev/null 2>&1 &
           echo "DEO_FRONTEND_PID=$!" >> "$GITHUB_ENV"
-          sleep 60
+          sleep 10
+          ps aux
+          sleep 10
+          ps aux
       - name: Execute end-to-end tests (${{ matrix.browser }})
         run: dotnet test --no-restore Deo.WebApp.Tests -e BROWSER=${{ matrix.browser }} -e DEO_FRONTEND_URL=$DEO_FRONTEND_URL
       - name: Shutdown web app
