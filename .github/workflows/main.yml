@@ -105,6 +105,7 @@ jobs:
           dotnet run --no-build --project Deo.Frontend -e DEO_BACKEND_URL=$DEO_BACKEND_URL -- --urls $DEO_FRONTEND_URL > /dev/null 2>&1 &
           echo "DEO_FRONTEND_PID=$!" >> "$GITHUB_ENV"
           ps aux
+          sleep 10
           curl $DEO_FRONTEND_URL
       - name: Execute end-to-end tests (${{ matrix.browser }})
         run: dotnet test --no-restore Deo.WebApp.Tests -e BROWSER=${{ matrix.browser }} -e DEO_FRONTEND_URL=$DEO_FRONTEND_URL
