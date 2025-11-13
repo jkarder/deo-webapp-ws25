@@ -4,11 +4,12 @@ run-name: Run triggered by ${{ github.actor }} 😎
 
 on: [push, workflow_dispatch]
 
+env:
+  DOTNET_INSTALL_DIR: /home/actions-runner/dotnet
+
 jobs:
   build:
     runs-on: self-hosted
-    env:
-      DOTNET_INSTALL_DIR: /home/actions-runner/dotnet
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
@@ -26,6 +27,41 @@ jobs:
         uses: actions/upload-artifact@v5
         with:
           name: build
+          path: |
+            **/bin/
+            **/obj/
+
+  test:
+    runs-on: self-hosted
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: build
+      - name: Set up .NET 9
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 9
+          cache: true
+          cache-dependency-path: |
+            Deo.Backend.Tests/packages.lock.json
+            Deo.Frontend.Tests/packages.lock.json
+      - name: Restore dependencies
+        run: |
+          dotnet restore --locked-mode Deo.Backend.Tests
+          dotnet restore --locked-mode Deo.Frontend.Tests
+      - name: Test projects
+        run: |
+          dotnet test --no-restore Deo.Backend.Tests
+          dotnet test --no-restore Deo.Frontend.Tests
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: test
           path: |
             **/bin/
             **/obj/
