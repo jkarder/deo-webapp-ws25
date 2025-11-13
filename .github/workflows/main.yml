@@ -98,16 +98,14 @@ jobs:
             Deo.WebApp.Tests/packages.lock.json
       - name: Restore dependencies
         run: dotnet restore --locked-mode Deo.WebApp.Tests
-      - name: Launch web app
+      - name: Launch backend
         run: |
           dotnet run --no-build --project Deo.Backend -- --urls $DEO_BACKEND_URL > /dev/null 2>&1 &
-          echo "DEO_BACKEND_PID=$!" >> "$GITHUB_ENV"
-          sleep 10
+          # echo "DEO_BACKEND_PID=$!" >> "$GITHUB_ENV"
+      - name: Launch frontend
+        run: |
           dotnet run --no-build --project Deo.Frontend -e DEO_BACKEND_URL=$DEO_BACKEND_URL -- --urls $DEO_FRONTEND_URL > /dev/null 2>&1 &
-          echo "DEO_FRONTEND_PID=$!" >> "$GITHUB_ENV"
-          sleep 10
-          ps aux
-          curl $DEO_FRONTEND_URL
+          # echo "DEO_FRONTEND_PID=$!" >> "$GITHUB_ENV"
       - name: Execute end-to-end tests (${{ matrix.browser }})
         run: dotnet test --no-restore Deo.WebApp.Tests -e BROWSER=${{ matrix.browser }} -e DEO_FRONTEND_URL=$DEO_FRONTEND_URL
       - name: Shutdown web app
