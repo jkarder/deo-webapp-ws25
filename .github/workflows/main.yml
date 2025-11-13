@@ -84,7 +84,7 @@ jobs:
       - name: Download test artifact
         uses: actions/download-artifact@v5
         with:
-          name: build
+          name: test
       - name: Set up .NET 9
         uses: actions/setup-dotnet@v5
         with:
