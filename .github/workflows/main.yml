@@ -100,10 +100,7 @@ jobs:
         run: dotnet restore --locked-mode Deo.WebApp.Tests
       - name: Launch web app
         run: |
-          dotnet run --project Deo.Backend -- --urls $DEO_BACKEND_URL > /dev/null 2>&1 &
-          echo "DEO_BACKEND_PID=$!" >> "$GITHUB_ENV"
-          dotnet run --project Deo.Frontend -e DEO_BACKEND_URL=$DEO_BACKEND_URL -- --urls $DEO_FRONTEND_URL > /dev/null 2>&1 &
-          echo "DEO_FRONTEND_PID=$!" >> "$GITHUB_ENV"
+          tree
       - name: Execute end-to-end tests (${{ matrix.browser }})
         run: dotnet test --no-restore Deo.WebApp.Tests -e BROWSER=${{ matrix.browser }} -e DEO_FRONTEND_URL=$DEO_FRONTEND_URL
       - name: Shutdown web app
