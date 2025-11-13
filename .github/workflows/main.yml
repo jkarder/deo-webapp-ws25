@@ -4,11 +4,14 @@ run-name: Run triggered by ${{ github.actor }} 😎
 
 on: [push, workflow_dispatch]
 
+env:
+  DOTNET_INSTALL_DIR: /home/actions-runner/dotnet
+  DOTNET_TOOLS_INSTALL_DIR: /home/actions-runner/dotnet-tools
+  NUGET_PACKAGES: /home/actions-runner/.nuget/packages
+
 jobs:
   build:
     runs-on: self-hosted
-    env:
-      DOTNET_INSTALL_DIR: /home/actions-runner/dotnet
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
@@ -33,9 +36,6 @@ jobs:
   test:
     runs-on: self-hosted
     needs: build
-    env:
-      DOTNET_INSTALL_DIR: /home/actions-runner/dotnet
-      NUGET_PACKAGES: /home/actions-runner/.nuget/packages
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
@@ -72,10 +72,6 @@ jobs:
   analyze:
     runs-on: self-hosted
     needs: test
-    env:
-      DOTNET_INSTALL_DIR: /home/actions-runner/dotnet
-      DOTNET_TOOLS_INSTALL_DIR: /home/actions-runner/dotnet-tools
-      NUGET_PACKAGES: /home/actions-runner/.nuget/packages
     steps:
       - name: Check out repository code
         uses: actions/checkout@v5
@@ -113,7 +109,7 @@ jobs:
           /home/actions-runner/dotnet-tools/dotnet-coverage collect "dotnet test Deo.Frontend.Tests" -f xml -o "frontend.coverage.xml"
           /home/actions-runner/dotnet-tools/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: analyze
           path: "**/*.coverage.xml"
