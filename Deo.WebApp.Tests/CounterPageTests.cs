@@ -36,7 +36,7 @@ public class CounterPageTests : PageTest
     [Test]
     public async Task CounterStartsAtZero()
     {
-        await Page.GotoAsync("/");
+        await Page.GotoAsync("/service-counter");
         await Page.GetByRole(AriaRole.Link, new() { Name = "Local Counter" }).ClickAsync();
         await Expect(Page.GetByRole(AriaRole.Status)).ToHaveTextAsync("Current count: 0");
     }
@@ -44,7 +44,7 @@ public class CounterPageTests : PageTest
     [Test]
     public async Task CounterIncrements()
     {
-        await Page.GotoAsync("/");
+        await Page.GotoAsync("/service-counter");
         await Page.GetByRole(AriaRole.Link, new() { Name = "Local Counter" }).ClickAsync();
         await Expect(Page.GetByRole(AriaRole.Status)).ToHaveTextAsync("Current count: 0");
         await Page.GetByRole(AriaRole.Button, new() { Name = "Increment" }).ClickAsync();
