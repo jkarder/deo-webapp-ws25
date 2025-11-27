@@ -1,0 +1,4 @@
+{
+    "sonarQubeUri": "http://deo-sonarqube:9000",
+    "projectKey": "Deo.WebApp"
+}
